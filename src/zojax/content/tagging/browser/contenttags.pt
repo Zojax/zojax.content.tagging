@@ -1,0 +1,8 @@
+<div class="z-content-tags" i18n:domain="zojax.content.tagging">
+  <h3 i18n:translate="">Tags</h3>
+
+  <tal:block tal:repeat="tag view/tags">
+    <a tal:content="tag" 
+       tal:attributes="title tag; href string:${view/site_url}/@@tags/global/${tag}/" /><tal:block condition="not:repeat/tag/end">,</tal:block>
+  </tal:block>
+</div>

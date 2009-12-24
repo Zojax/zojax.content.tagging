@@ -1,0 +1,11 @@
+<h1 class="z-content-title" i18n:domain="zojax.content.tagging" i18n:translate="">Tags</h1>
+
+<div>
+  <ul class="z-listing">
+    <li tal:repeat="term view/voc"
+	tal:attributes="class python:repeat['term'].even() and 'even' or 'odd'">
+      <a tal:content="term/title"
+	 tal:attributes="href string:${term/token}/"></a>
+      <div class="byline" tal:content="python:term.description"></div>
+    </li>
+</div>

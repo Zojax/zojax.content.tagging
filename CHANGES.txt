@@ -1,0 +1,57 @@
+=======
+CHANGES
+=======
+
+
+1.0.0 (2009-08-11)
+------------------
+
+- Fixed portlet links
+
+- Update test for chameleon enabled setup
+
+- Added label attribute to portlet
+
+- Copyright changed to 'Zope Foundation and Contributors'
+
+
+0.9.5 (2009-05-05)
+------------------
+
+- Do not use z3c.autoinclude
+
+
+0.9.4 (2009-04-03)
+------------------
+
+- Fixed widget not changed status
+
+- Tags as links in content tags pageelement
+
+
+0.9.3 (2009-03-31)
+------------------
+
+- Widget tags uniqueness fixed
+
+- Engine for unknown content type fixed
+
+
+0.9.2 (2009-03-17)
+------------------
+
+- Update tag cloud porlet styles
+
+- Added i18n pot file
+
+
+0.9.1 (2009-03-14)
+------------------
+
+- Added 'tags' content column
+
+
+0.9.0 (2009-03-12)
+------------------
+
+- Initial release.

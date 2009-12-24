@@ -1,0 +1,40 @@
+<tal:block  i18n:domain="zojax.content.tagging">
+  <div class="context-actions">
+    <ul>
+      <li>
+	<a title="Tag contents rss feed" href="@@feeds/content" i18n:attributes="title">
+	  <img tal:attributes="src context/++resource++rss-icon.png" />
+	</a>
+      </li>
+    </ul>
+  </div>
+  <h1 class="z-content-title">
+    <tal:block content="context/__parent__/title"/>, 
+   <tal:block tal:content="context/__name__" /></h1>
+  <div class="z-page-description" i18n:translate="">
+    Total number of items in this tagging engine is <tal:block i18n:name="number" tal:content="view/total"/></div>
+  
+  <div tal:condition="not:view/contents" i18n:translate="">
+    There are no contents for this tag.
+  </div>
+  
+  <div tal:condition="view/contents">
+    <ul class="z-listing">
+      <li tal:repeat="content view/getContents">
+	<div class="z-listing-icon">
+	  <img tal:replace="structure content/icon" tal:condition="content/icon" />
+	</div>
+	<div class="z-listing-details">
+	  <a tal:content="content/title" 
+	     tal:attributes="href content/url; title content/description">
+	  </a>
+	  <div class="byline" i18n:translate="">
+	    Modified <tal:block i18n:name="date" content="structure formatter:fancyDatetime,medium:content/modified" />
+	  </div>
+	  <div tal:content="content/description"></div>
+	</div>
+      </li>
+    </ul>
+    <div class="visualClear"></div>
+  </div>
+</tal:block>

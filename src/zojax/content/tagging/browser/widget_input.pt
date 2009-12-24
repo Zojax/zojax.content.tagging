@@ -1,0 +1,45 @@
+<tal:block i18n:domain="zojax.content.tagging">
+<input type="text" id="" name="" class="" title="" lang="" disabled=""
+       readonly="" alt="" tabindex="" accesskey="" size="" maxlength=""
+       tal:attributes="id view/id;
+                       name view/name;
+                       class view/klass;
+                       style view/style;
+                       title view/title;
+                       lang view/lang;
+                       onclick view/onclick;
+                       ondblclick view/ondblclick;
+                       onmousedown view/onmousedown;
+                       onmouseup view/onmouseup;
+                       onmouseover view/onmouseover;
+                       onmousemove view/onmousemove;
+                       onmouseout view/onmouseout;
+                       onkeypress view/onkeypress;
+                       onkeydown view/onkeydown;
+                       onkeyup view/onkeyup;
+                       value view/value;
+                       disabled view/disabled;
+                       tabindex view/tabindex;
+                       onfocus view/onfocus;
+                       onblur view/onblur;
+                       onchange view/onchange;
+                       readonly view/readonly;
+                       alt view/alt;
+                       accesskey view/accesskey;
+                       onselect view/onselect;
+                       size view/size;
+                       maxlength view/maxlength" />
+<div class="z-form-help" i18n:translate="">
+  Use commas to separate multiple tags.
+</div>
+<div class="z-widget-tags-popular"
+     tal:define="tags view/popularTags" tal:condition="tags">
+  <tal:block i18n:translate="">
+    <strong>Popular Tags:</strong> Below is a list of frequently used tags in the system.
+  </tal:block>
+  <div class="z-widget-tags-links">
+    <a href="#" tal:repeat="tag tags" tal:content="tag"
+       tal:attributes="onclick string:document.getElementById('${view/id}').value += ', $tag';; return false;;;"></a>
+  </div>
+</div>
+</tal:block>

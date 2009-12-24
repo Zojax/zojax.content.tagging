@@ -1,0 +1,129 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:i18n="http://namespaces.zope.org/i18n"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   i18n_domain="zojax.content.tagging">
+
+  <!-- content tags -->
+  <adapter
+     factory=".tags.ContentTags"
+     provides=".interfaces.IContentTags" />
+
+  <class class=".tags.ContentTags">
+    <require
+       permission="zope.View"
+       interface=".interfaces.IContentTags" />
+    <require
+       permission="zojax.ModifyContent"
+       set_schema=".interfaces.IContentTags" />
+  </class>
+
+  <!-- configlet -->
+  <zojax:configlet
+     name="content.tagging"
+     title="Content tagging"
+     description="This area allows you to configure and manage content tagging."
+     class=".configlet.ContentTaggingConfiglet"
+     schema=".interfaces.IContentTaggingConfiglet"
+     permission="zojax.Configure">
+    <require
+       permission="zojax.Configure"
+       interface="zope.app.container.interfaces.IWriteContainer" />
+    <require
+       permission="zope.View"
+       interface="zojax.content.type.interfaces.IItem
+		  zope.app.container.interfaces.IReadContainer" />
+  </zojax:configlet>
+
+  <!-- Engines Container -->
+  <zojax:content
+     name="content.tagging.container"
+     title="Content tagging"
+     schema=".interfaces.IContentTaggingConfiglet"
+     class=".configlet.ContentTaggingConfiglet"
+     description="Container for content tagging engines."
+     type="zojax.content.type.interfaces.IInactiveType" 
+     contains=".interfaces.IContentTaggingEngineType" />
+
+  <class class=".configlet.ContentTaggingConfiglet">
+    <implements interface="zojax.content.type.interfaces.IOrderAware" />
+    <implements interface="zojax.content.type.interfaces.IContainerContentsAware" />
+  </class>
+
+  <!-- content tagging engine -->
+  <zojax:content
+     name="content.tagging.content"
+     title="Content tagging engine"
+     schema=".interfaces.IContentTaggingEngine"
+     class=".engine.ContentTaggingEngine"
+     type="zojax.content.type.interfaces.IInactiveType" 
+     containers=".interfaces.IContentTaggingConfiglet" />
+
+  <class class=".engine.ContentTaggingEngine">
+    <allow interface=".interfaces.IContentTaggingEngine" />
+    <require
+       permission="zope.View"
+       interface="zojax.content.type.interfaces.IItem" />
+  </class>
+
+  <!-- global tagging engine -->
+  <zojax:content
+     name="content.tagging.global"
+     title="Global tagging engine"
+     schema=".interfaces.IGlobalTaggingEngine"
+     class=".engine.GlobalTaggingEngine"
+     type="zojax.content.type.interfaces.IInactiveType" 
+     containers=".interfaces.IContentTaggingConfiglet" />
+
+  <class class=".engine.GlobalTaggingEngine">
+    <allow interface=".interfaces.IGlobalTaggingEngine" />
+    <require
+       permission="zope.View"
+       interface="zojax.content.type.interfaces.IItem" />
+  </class>
+
+  <!-- subscribers -->
+  <subscriber handler=".subscribers.objectAdded" />
+  <subscriber handler=".subscribers.objectModified" />
+  <subscriber handler=".subscribers.objectRemoved" />
+
+  <!-- vocabularies -->
+  <utility
+     name="content.tagging.egines"
+     factory=".vocabulary.TaggingEnginesVocabulary" />
+
+  <!-- portlet -->
+  <zojax:portlet
+     title="Content tags cloud"
+     name="portlet.content.tagging"
+     class=".portlet.ContentTaggingPortlet"
+     schema=".interfaces.IContentTaggingPortlet" />
+
+  <!-- rss feeds -->
+  <adapter 
+     name="tags"
+     factory=".feeds.TagsRSSFeed" />
+
+  <class class=".feeds.TagsRSSFeed">
+    <require
+       permission="zope.View"
+       interface="zojax.content.feeds.interfaces.IFeed" />
+  </class>
+
+  <adapter 
+     name="content"
+     factory=".feeds.TagItemsRSSFeed" />
+
+  <class class=".feeds.TagItemsRSSFeed">
+    <require
+       permission="zope.View"
+       interface="zojax.content.feeds.interfaces.IFeed" />
+  </class>
+
+  <!-- browser views -->
+  <include package=".browser" />
+
+  <!-- translations -->
+  <i18n:registerTranslations directory="locales" />
+
+</configure>
