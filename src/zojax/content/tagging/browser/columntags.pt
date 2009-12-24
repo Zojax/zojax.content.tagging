@@ -1,0 +1,4 @@
+<tal:block tal:repeat="tag view/query">
+  <a tal:attributes="href python:tag[1]" tal:content="python:tag[0]">
+  </a><tal:block condition="not:repeat/tag/end">,</tal:block>
+</tal:block>

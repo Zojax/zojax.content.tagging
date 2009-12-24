@@ -1,0 +1,443 @@
+=============
+Browser tests
+=============
+
+    >>> from zope import interface, component, event
+    >>> from zope.testbrowser.testing import Browser
+    >>> from zope.lifecycleevent import ObjectCreatedEvent
+    >>> from zope.lifecycleevent import ObjectModifiedEvent
+    >>> from zojax.content.tagging.interfaces \
+    ...      import IContentTags, IContentTaggable, IContentTaggingConfiglet
+    >>> from zojax.content.tagging.tests.content import Content2
+
+    >>> root = getRootFolder()
+
+    >>> content11 = root['content11']
+    >>> content12 = root['content12']
+    >>> content21 = root['content21']
+    >>> content22 = root['content22']
+    >>> configlet = component.getUtility(IContentTaggingConfiglet)
+
+    >>> admin = Browser()
+    >>> admin.addHeader("Authorization", "Basic mgr:mgrpw")
+    >>> admin.handleErrors = False
+
+
+Content tagging configlet
+-------------------------
+
+By default we don't have any engines
+
+    >>> admin.open('http://localhost/settings/content/tagging/')
+    >>> print admin.contents
+    <html>
+    ...
+    <div class="z-table-emtpy">There are no items in this container.</div>
+    ...
+    </html>
+
+    >>> configlet.globalEngine
+    <zojax.content.tagging.engine.GlobalTaggingEngine ...>
+
+    for name, engine in configlet.items():
+    ...     print name, engine
+    global <zojax.content.tagging.engine.GlobalTaggingEngine ...>
+
+    >>> interface.alsoProvides(content21, IContentTaggable)
+    >>> interface.alsoProvides(content22, IContentTaggable)
+    >>> event.notify(ObjectModifiedEvent(root['content21']))
+    >>> event.notify(ObjectModifiedEvent(root['content22']))
+
+    >>> for name, engine in configlet.items():
+    ...     print name, '"%s"'%engine.title
+    global "All tags"
+    tests.content2 "Tags for: Content2"
+
+    >>> sync()
+
+
+Modify content
+--------------
+
+    >>> user = Browser()
+    >>> user.addHeader("Authorization", "Basic user:userpw")
+    >>> user.handleErrors = False
+
+    >>> user.open('http://localhost/content11/context.html')
+    >>> 'Tags' in user.contents
+    False
+
+let's mark content as taggable
+
+    >>> interface.alsoProvides(root['content11'], IContentTaggable)
+
+    >>> IContentTags(content11).tags
+    ()
+    >>> IContentTags(content11).__parent__ is content11
+    True
+    >>> IContentTags(content11).tags = None
+    >>> IContentTags(content11).tags
+    ()
+
+    >>> user.reload()
+    >>> print user.contents
+    <html>
+    ...
+    <label for="form-widgets-tags"
+             title="Think of a tag as a simple category name. You can categorize your documents, files, and blog posts with any word or words that makes sense.">Tags</label>
+    <div class="z-form-help">Think of a tag as a simple category name. You can categorize your documents, files, and blog posts with any word or words that makes sense.</div>
+    <div>
+    <input type="text" id="form-widgets-tags"
+           name="form.widgets.tags"
+           class="z-widget-tags tagsfield-field" value="" />
+    <div class="z-form-help">
+      Use commas to separate multiple tags.
+    </div>
+    ...
+    </html>
+
+    >>> user.getControl('Tags').value = 'tag1, tag2, tag3'
+    >>> user.getControl(name="content.edit.buttons.save").click()
+
+    >>> from transaction import commit
+    >>> commit()
+
+    >>> IContentTags(content11).tags
+    (u'tag1', u'tag2', u'tag3')
+
+    >>> list(configlet.globalEngine.getTagCloud())
+    [(100.0, u'tag1'), (100.0, u'tag2'), (100.0, u'tag3')]
+
+
+tags for 'Content2' type
+
+    >>> interface.alsoProvides(content21, IContentTaggable)
+    >>> interface.alsoProvides(content22, IContentTaggable)
+
+    >>> user.open('http://localhost/content21/context.html')
+    >>> user.getControl('Tags').value = 'tag1, tag2'
+    >>> user.getControl(name="content.edit.buttons.save").click()
+
+We see tags in content as links
+    >>> user.open('http://localhost/content21/')
+    >>> user.getLink('tag1')
+    <Link text='tag1' url='http://localhost/@@tags/global/tag1/'>
+
+    >>> IContentTags(content21).tags
+    (u'tag1', u'tag2')
+
+    >>> list(configlet.globalEngine.getTagCloud(True))
+    [(100.0, u'tag2'), (100.0, u'tag1'), (50.0, u'tag3')]
+
+    >>> user.open('http://localhost/content21/context.html')
+    >>> print user.contents
+    <html>
+    ...
+    <strong>Popular Tags:</strong> Below is a list of frequently used tags in the system.
+    <div class="z-widget-tags-links">
+        <a href="#"
+           onclick="document.getElementById('form-widgets-tags').value += ', tag2'; return false;">tag2</a>
+        <a href="#"
+           onclick="document.getElementById('form-widgets-tags').value += ', tag1'; return false;">tag1</a>
+        <a href="#"
+           onclick="document.getElementById('form-widgets-tags').value += ', tag3'; return false;">tag3</a>
+    </div>
+    ...
+    </html>
+
+    >>> user.getControl('Tags').value = ', tag1, tag4, , tag1'
+    >>> user.getControl(name="content.edit.buttons.save").click()
+
+    >>> IContentTags(content21).tags
+    (u'tag1', u'tag4')
+
+    >>> list(configlet.globalEngine.getTagCloud(True))
+    [(100.0, u'tag1'), (50.0, u'tag3'), (50.0, u'tag2'), (50.0, u'tag4')]
+
+    >>> IContentTags(content22).tags = (u'tag4', u'tag5')
+    >>> event.notify(ObjectModifiedEvent(content22))
+
+    >>> list(configlet.globalEngine.getTagCloud(True))
+    [(66.666666666666671, u'tag1'), (66.666666666666671, u'tag4'), (33.333333333333336, u'tag3'), (33.333333333333336, u'tag2'), (33.333333333333336, u'tag5')]
+
+
+Tagging enging for content type
+-------------------------------
+
+    >>> configlet.globalEngine.itemsCount
+    3
+
+    >>> configlet.globalEngine.tagsCount
+    5
+
+    >>> engine = configlet.engineForContent(content11)
+    >>> engine.itemsCount
+    1
+    >>> engine.tagsCount
+    3
+    >>> list(engine.getTagCloud(True))
+    [(100.0, u'tag3'), (100.0, u'tag2'), (100.0, u'tag1')]
+
+    >>> engine = configlet.engineForContent(content21)
+    >>> engine.itemsCount
+    2
+    >>> engine.tagsCount
+    3
+    >>> list(engine.getTagCloud(True))
+    [(100.0, u'tag4'), (50.0, u'tag1'), (50.0, u'tag5')]
+
+
+Taggable content types
+----------------------
+
+    >>> for engine in configlet.contentTypesEngines():
+    ...     print engine.__name__, engine
+
+
+Tags browser
+------------
+
+List of all tags engines
+
+    >>> user.open('http://localhost/@@tags/')
+    >>> print user.contents
+    <html>
+    ...<h1 class="z-content-title">Tags</h1>...
+    <ul class="z-listing">
+       <li class="even">
+          <a href="global/">All tags</a>
+          <div class="byline">Total items: 3, total tags: 5</div>
+       </li> <li class="odd">
+          <a href="tests.content1/">Tags for: Content1</a>
+          <div class="byline">Total items: 1, total tags: 3</div>
+       </li> <li class="even">
+          <a href="tests.content2/">Tags for: Content2</a>
+          <div class="byline">Total items: 2, total tags: 3</div>
+       </li>
+    </ul>...
+    </html>
+
+Tag cloud for engine
+
+    >>> user.getLink('All tags').click()
+
+    >>> user.url
+    'http://localhost/@@tags/global/'
+
+    >>> print user.contents
+    <html>
+    ...<h1>All tags</h1>
+    <div class="z-page-description">Total items: 3, total tags: 5</div>
+    <div class="zojax-content-tagging-engine-tagslist">
+        <span style="font-size: 166.67%"><a href="tag1/">tag1</a></span>
+        <span style="font-size: 133.33%"><a href="tag2/">tag2</a></span>
+        <span style="font-size: 133.33%"><a href="tag3/">tag3</a></span>
+        <span style="font-size: 166.67%"><a href="tag4/">tag4</a></span>
+        <span style="font-size: 133.33%"><a href="tag5/">tag5</a></span>
+    </div>
+    ...
+    </html>
+
+List of content for tag
+
+    >>> user.getLink('tag1').click()
+
+    >>> user.url
+    'http://localhost/@@tags/global/tag1/'
+
+    >>> print user.contents
+    <html>
+    ...<div class="context-actions">
+      <ul>
+        <li>
+          <a title="Tag contents rss feed" href="@@feeds/content">
+            <img src="http://localhost/@@/rss-icon.png" />
+          </a>
+        </li>
+      </ul>
+    </div>
+    <h1 class="z-content-title">
+      All tags, tag1</h1>
+    <div class="z-page-description">
+      Total number of items in this tagging engine is 2</div>
+    ...
+    <ul class="z-listing">
+      <li>
+        <div class="z-listing-icon">
+          <img src="..." alt="Content" width="16" height="16" border="0" />
+        </div>
+        <div class="z-listing-details">
+          <a href="http://localhost/content21/" title=""></a>
+          <div class="byline">
+            Modified ...
+          </div>
+          <div></div>
+        </div>
+      </li>
+      <li>
+        <div class="z-listing-icon">
+           <img src="..." alt="Content" width="16" height="16" border="0" />
+        </div>
+        <div class="z-listing-details">
+           <a href="http://localhost/content11/" title=""></a>
+           <div class="byline">
+             Modified ...
+           </div>
+           <div></div>
+        </div>
+      </li>
+    </ul>
+    ...
+    </html>
+
+
+Tag content rss feed
+--------------------
+
+    >>> user.open('http://localhost/@@tags/global/tag1/@@feeds/content')
+    >>> print user.contents
+    <?xml version="1.0" encoding="UTF-8"?>
+    <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+      <channel>
+        <title>Tag content</title>
+        <link>http://localhost/tags/global/tag1/</link>
+        <description>List of content for tag.</description>
+        <atom:link rel="self" type="application/rss+xml"
+                   href="http://localhost/tags/global/tag1/@@feeds/content"/>
+        <item>
+          <title></title>
+          <description></description>
+          <guid isPermaLink="true">http://localhost/content21/</guid>
+          <pubDate>...</pubDate>
+        </item>
+        <item>
+          <title></title>
+          <description></description>
+          <guid isPermaLink="true">http://localhost/content11/</guid>
+          <pubDate>...</pubDate>
+        </item>
+      </channel>
+    </rss>
+
+
+Tags portlet
+------------
+
+    >>> user.open('http://localhost/portlet')
+    >>> print user.contents
+    <html>
+    ...
+    ...<div class="z-portlet portlet-content-tagging">
+      <h2 class="z-portlet-header">
+        <a class="z-portlet-feed" title="Tags rss feed" href="http://localhost/@@feeds/tags">
+          <img src="http://localhost/@@/rss-icon.png" />
+        </a>
+        Tags
+      </h2>
+      <div class="z-portlet-body">
+        <div class="z-portlet-item">
+          <span style="font-size: 166.67%">
+             <a href="http://localhost/@@tags/global/tag1/">tag1</a>
+          </span> <span style="font-size: 166.67%">
+             <a href="http://localhost/@@tags/global/tag4/">tag4</a>
+          </span> <span style="font-size: 133.33%" class="tag-small">
+             <a href="http://localhost/@@tags/global/tag3/">tag3</a>
+          </span> <span style="font-size: 133.33%" class="tag-small">
+             <a href="http://localhost/@@tags/global/tag2/">tag2</a>
+          </span> <span style="font-size: 133.33%" class="tag-small">
+             <a href="http://localhost/@@tags/global/tag5/">tag5</a>
+          </span>
+        </div>
+      </div>
+      <div class="z-portlet-footer">
+        <a href="http://localhost/@@tags/global/">More tags...</a>
+      </div>
+    </div>...
+    ...
+    </html>
+
+
+Tags rss feed
+-------------
+
+    >>> user.open('http://localhost/@@feeds/tags')
+    >>> print user.contents
+    <?xml version="1.0" encoding="UTF-8"?>
+    <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+      <channel>
+        <title>Tags</title>
+        <link>http://localhost/</link>
+        <description>List of all available tags.</description>
+        <atom:link rel="self" type="application/rss+xml"
+                   href="http://localhost/@@feeds/tags"/>
+        <item>
+          <title>tag1</title>
+          <description>Total number of items for this tag is 2</description>
+          <guid isPermaLink="true">http://localhost/@@tags/global/tag1/</guid>
+        </item>
+        <item>
+          <title>tag4</title>
+          <description>Total number of items for this tag is 2</description>
+          <guid isPermaLink="true">http://localhost/@@tags/global/tag4/</guid>
+        </item>
+        <item>
+          <title>tag3</title>
+          <description>Total number of items for this tag is 1</description>
+          <guid isPermaLink="true">http://localhost/@@tags/global/tag3/</guid>
+        </item>
+        <item>
+          <title>tag2</title>
+          <description>Total number of items for this tag is 1</description>
+          <guid isPermaLink="true">http://localhost/@@tags/global/tag2/</guid>
+        </item>
+        <item>
+          <title>tag5</title>
+          <description>Total number of items for this tag is 1</description>
+          <guid isPermaLink="true">http://localhost/@@tags/global/tag5/</guid>
+        </item>
+      </channel>
+    </rss>
+
+
+Tags column
+-----------
+
+    >>> from zope.publisher.browser import TestRequest
+    >>> from zojax.content.tagging.browser.columns import TagsColumn
+
+    >>> tags = TagsColumn(root, TestRequest(), None).__bind__(root['content21'], {}, {})
+    >>> print tags.render()
+    <a href="http://127.0.0.1/@@tags/global/tag1/">tag1</a>,
+    <a href="http://127.0.0.1/@@tags/global/tag4/">tag4</a>
+
+
+Remove content
+--------------
+
+    >>> del root['content21']
+    >>> list(configlet['tests.content2'].getTagCloud(True))
+    [(100.0, u'tag5'), (100.0, u'tag4')]
+
+    >>> list(configlet['global'].getTagCloud(True))
+    [(50.0, u'tag3'), (50.0, u'tag2'), (50.0, u'tag1'), (50.0, u'tag5'), (50.0, u'tag4')]
+
+    >>> del root['content22']
+    >>> del root['content11']
+
+    >>> list(configlet['global'].getTagCloud(True))
+    []
+
+
+just tests
+
+    >>> user.open('http://localhost/@@tags/unknown/')
+    Traceback (most recent call last):
+    ...
+    NotFound:...
+
+    >>> user.open('http://localhost/@@tags/global/unknown/')
+    Traceback (most recent call last):
+    ...
+    NotFound:...
+
+    >>> admin.open('http://localhost/settings/content/tagging/rebuild.html')

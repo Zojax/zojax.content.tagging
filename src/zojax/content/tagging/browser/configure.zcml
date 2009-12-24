@@ -1,0 +1,119 @@
+<configure
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:z3c="http://namespaces.zope.org/z3c"
+   xmlns:zojax="http://namespaces.zope.org/zojax"
+   xmlns:browser="http://namespaces.zope.org/browser"
+   i18n_domain="zojax.content.tagging">
+
+   <zojax:pageelement
+     name="content.tagging"
+     for="zojax.content.tagging.interfaces.IContentTaggable"
+     template="contenttags.pt"
+     class=".tags.Tags"
+     manager="zojax.content.browser.interfaces.IContentBottom"
+     weight="8888" />
+
+  <!-- configlet -->
+  <browser:defaultView
+     name="context.html"
+     for="..interfaces.IContentTaggingConfiglet" />
+
+  <browser:page
+     name="rebuild.html"
+     for="..interfaces.IContentTaggingConfiglet"
+     attribute="rebuild"
+     class=".configlet.ConfigletView"
+     permission="zojax.Configure" />
+
+  <!-- tags browsing -->
+  <zojax:pagelet
+     name="tags"
+     for="zope.app.component.interfaces.ISite"
+     template="tags.pt"
+     class=".tags.TagsWorkspace"
+     permission="zope.View" />
+
+  <!-- engine view -->
+  <browser:defaultView
+     name="index.html"
+     for="..interfaces.IContentTaggingEngineBase" />
+
+  <zojax:pagelet
+     name="index.html"
+     for="..interfaces.IContentTaggingEngineBase"
+     template="engine.pt"
+     class=".engine.EngineView"
+     permission="zope.View" />
+
+  <zojax:pagelet
+     name="index.html"
+     for="..interfaces.IGlobalTaggingEngine"
+     template="engine.pt"
+     class=".engine.EngineView"
+     permission="zope.View" />
+
+  <zojax:pagelet
+     name="index.html"
+     for=".engine.TagWrapper"
+     template="tag.pt"
+     class=".engine.TagView"
+     permission="zope.View" />
+
+  <adapter
+     for="..interfaces.IContentTaggingEngineBase *"
+     factory="z3c.traverser.traverser.PluggableTraverser"
+     provides="zope.publisher.interfaces.IPublishTraverse" />
+
+  <subscriber
+     for="..interfaces.IContentTaggingEngineBase *"
+     provides="z3c.traverser.interfaces.ITraverserPlugin"
+     factory=".engine.EnginePublisher" />
+
+  <!-- edit content wizard -->
+  <zojax:pagelet
+     name="content.tags"
+     type="form.subform"
+     for="zojax.content.tagging.interfaces.IContentTaggable
+	  zojax.content.forms.interfaces.IContentStep"
+     class=".editwizard.TagsEditForm"
+     weight="100" />
+
+  <!-- tags field  widget -->
+  <adapter factory=".widget.TagsFieldWidget" />
+  <adapter factory=".widget.TagsWidgetConverter" />
+
+  <z3c:widgetTemplate
+     mode="input"
+     widget=".interfaces.ITagsWidget"
+     layer="z3c.form.interfaces.IFormLayer"
+     template="widget_input.pt" />
+
+  <!-- portlet template -->
+  <zojax:pagelet
+     type="portlet.view"
+     for="..interfaces.IContentTaggingPortlet"
+     class=".tagcloudportlet.TagCloudPortletView"
+     template="tagcloudportlet.pt" />
+
+  <!-- tags column -->
+  <adapter
+     name="tags"
+     factory=".columns.TagsColumn" />
+
+  <!-- icons -->
+  <browser:icon
+     name="zmi_icon"
+     for="..interfaces.IContentTaggingConfiglet"
+     file="tag_blue.png" />
+
+  <browser:icon
+     name="zmi_icon"
+     for="..interfaces.ITagsRSSFeed"
+     file="tag_blue.png" />
+
+  <!-- styles -->
+  <zojax:resourceinclude
+     name="zojax-content-tagging.css" library="zojax"
+     type="stylesheet" file="styles.css" filetype="zrt" />
+
+</configure>

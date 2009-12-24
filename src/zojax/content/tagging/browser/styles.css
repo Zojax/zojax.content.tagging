@@ -1,0 +1,62 @@
+/* zrt-cssregistry: */
+
+@media all {
+
+  .portlet-content-tagging { 
+    background: transparent none;
+  }
+
+  .portlet-content-tagging span { 
+    padding-right: 0.25em;
+  }
+
+  .portlet-content-tagging span.tag-small a {
+    color: discreetColor;
+  }
+
+  .portlet-content-tagging span a { 
+    border: 0;
+  }
+
+  .z-content-tags { 
+    font-size: 90%;
+    padding-top: 2em;
+    color: discreetColor;
+  }
+
+  .z-content-tags h3 {
+    font-weight: normal;
+    color: discreetColor;
+  }
+
+  .z-content-tags a {
+    text-decoration: none;
+  }
+
+  .z-content-tags a:hover {
+    color: globalExtraColor;
+  }
+
+  .z-widget-tags {
+    width: 80%;
+  }
+
+  .z-widget-tags-popular {
+    font-size: 80%;
+    padding-top: 0.5em;
+  }
+
+  .z-widget-tags-links {
+    font-size: 120%;
+  }
+
+  .z-widget-tags-links a {
+    text-decoration: none;
+    padding-right: 0.3em;
+  }
+
+  .z-widget-tags-links a:hover {
+    color: globalExtraColor;
+  }
+
+}
