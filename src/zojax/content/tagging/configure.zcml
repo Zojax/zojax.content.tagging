@@ -21,7 +21,7 @@
   <!-- configlet -->
   <zojax:configlet
      name="content.tagging"
-     title="Content tagging"
+     title="Content item tag management"
      description="This area allows you to configure and manage content tagging."
      class=".configlet.ContentTaggingConfiglet"
      schema=".interfaces.IContentTaggingConfiglet"
