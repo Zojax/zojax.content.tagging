@@ -66,6 +66,7 @@ setup(name = 'zojax.content.tagging',
                           'zojax.content.table',
                           'zojax.content.browser',
                           'zojax.widget.radio',
+                          'zojax.cache'
                           ],
       extras_require = dict(test=['zope.app.testing',
                                   'zope.app.zcmlfiles',

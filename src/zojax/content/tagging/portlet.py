@@ -22,6 +22,11 @@ from zope.traversing.browser import absoluteURL
 from zope.app.component.hooks import getSite
 
 from zojax.catalog.interfaces import ICatalog
+from zojax.cache.ids import PortletId
+from zojax.portlet.cache import PortletModificationTag
+from zojax.cache.view import cache
+from zojax.cache.keys import Principal, PrincipalAndContext
+from zojax.content.space.portlets.cache import ContentTag
 
 from interfaces import IContentTaggingPortlet, IContentTaggingConfiglet
 
@@ -70,3 +75,13 @@ class ContentTaggingPortlet(object):
         self.siteUrl = absoluteURL(getSite(), self.request)
 
         super(ContentTaggingPortlet, self).update()
+
+
+    @cache(PortletId(), PortletModificationTag, PrincipalAndContext, ContentTag)
+    def updateAndRender(self):
+        self.update()
+        if self.isAvailable():
+            return self.render()
+        else:
+            return u''
+
