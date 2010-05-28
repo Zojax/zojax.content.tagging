@@ -105,6 +105,13 @@ class IContentTaggingPortlet(interface.Interface):
         default = '',
         required = True)
 
+    restrictContainedItems = schema.Bool(
+        title = _(u'Restrict tags to contained items'),
+        description = _('If checked tags will be shown only for contained objects in current space.'),
+        default = False,
+        required = True)
+
+
 
 class ITagsRSSFeed(IRSS2Feed):
     """ tags rss feed """

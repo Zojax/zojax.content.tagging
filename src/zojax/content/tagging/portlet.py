@@ -21,6 +21,8 @@ from zope.security.proxy import removeSecurityProxy
 from zope.traversing.browser import absoluteURL
 from zope.app.component.hooks import getSite
 
+from zojax.catalog.interfaces import ICatalog
+
 from interfaces import IContentTaggingPortlet, IContentTaggingConfiglet
 
 
@@ -35,7 +37,13 @@ class ContentTaggingPortlet(object):
         idx = 0
         tags = []
         engine = removeSecurityProxy(self.engineObject)
-        for weight, tag in engine.getTagCloud(True):
+        if self.restrictContainedItems:
+            catalog = getUtility(ICatalog)
+            cloud = engine.getItemsTagCloud(catalog.apply(dict(traversablePath=
+                                                {'any_of': (self.context, )})))
+        else:
+            cloud = engine.getTagCloud(True)
+        for weight, tag in cloud:
             weight = weight+100.0
             tags.append({'tag': tag, 'weight': '%0.2f'%weight, 'wvalue': weight})
             if idx == self.count:
