@@ -43,9 +43,11 @@ class ContentTaggingPortlet(object):
         tags = []
         engine = removeSecurityProxy(self.engineObject)
         if self.restrictContainedItems:
-            catalog = getUtility(ICatalog)
-            cloud = engine.getItemsTagCloud(catalog.apply(dict(traversablePath=
-                                                {'any_of': (self.context, )})))
+            items = getUtility(ICatalog).apply(dict(traversablePath=
+                                                {'any_of': (self.context, )}))
+            if items is None:
+                items = []
+            cloud = engine.getItemsTagCloud(items)
         else:
             cloud = engine.getTagCloud(True)
         for weight, tag in cloud:
