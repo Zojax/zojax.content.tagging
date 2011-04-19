@@ -8,4 +8,5 @@
 	 tal:attributes="href string:${term/token}/"></a>
       <div class="byline" tal:content="python:term.description"></div>
     </li>
+  </ul>
 </div>
