@@ -1,4 +1,5 @@
 <tal:block i18n:domain="zojax.content.tagging">
+<div class="tag-widget">
 <input type="text" id="" name="" class="" title="" lang="" disabled=""
        readonly="" alt="" tabindex="" accesskey="" size="" maxlength=""
        tal:attributes="id view/id;
@@ -38,8 +39,27 @@
     <strong>Popular Tags:</strong> Below is a list of frequently used tags in the system.
   </tal:block>
   <div class="z-widget-tags-links">
-    <a href="#" tal:repeat="tag tags" tal:content="tag"
-       tal:attributes="onclick string:document.getElementById('${view/id}').value += ', $tag';; return false;;;"></a>
+    <a href="#" tal:repeat="tag tags" tal:content="tag"></a>
   </div>
+  <tal:tag replace="structure string:<script type='text/javascript'>" />
+$(document).ready(function() {
+    $(".z-widget-tags-links a").click(function() {
+        var $this = $(this);
+        var $input = $( "#<tal:tag replace="view/id" />" );
+        var $tag = $this.text();
+        if ($input.val().indexOf($tag) == -1) {
+            var $text = $input.val() ? $input.val() + ', ' + $tag : $tag;
+            $input.val( $text );
+        }
+        return false;
+    });
+});
+  <tal:tag replace="structure string:</script>" />
+</div>
+</div>
+<div class="help-snippet">
+  <h4>TAGS - Important Tips</h4>
+  <p>Tags are simple category names like "Shipping" or "event". Tags will help you organize and find everything you add to your blog, as well as related information on other blogs.</p>
+  You can include just one tag or separate multiple tags with commas.
 </div>
 </tal:block>
