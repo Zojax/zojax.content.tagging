@@ -58,8 +58,10 @@ $(document).ready(function() {
 </div>
 </div>
 <div class="help-snippet">
-  <h4>TAGS - Important Tips</h4>
-  <p>Tags are simple category names like "Shipping" or "event". Tags will help you organize and find everything you add to your blog, as well as related information on other blogs.</p>
+  <h4 i18n:translate="">TAGS - Important Tips</h4>
+  <p i18n:translate="">Tags are simple category names like "Shipping" or "event". Tags will help you organize and find everything you add to your blog, as well as related information on other blogs.</p>
+  <tal:block i18n:translate="">
   You can include just one tag or separate multiple tags with commas.
+  </tal:block>
 </div>
 </tal:block>
