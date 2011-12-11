@@ -9,8 +9,7 @@
       tal:condition="not: context/label"
       i18n:translate="">Tags</tal:block>
     <tal:block content="context/label"
-      tal:condition="context/label"
-      i18n:translate="">Portlet Header</tal:block>
+      tal:condition="context/label">Portlet Header</tal:block>
   </h2>
   <div class="z-portlet-body">
     <div class="z-portlet-item" tal:define="tags context/listTags">
