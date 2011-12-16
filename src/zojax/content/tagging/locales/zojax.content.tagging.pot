@@ -1,0 +1,168 @@
+##############################################################################
+#
+# Copyright (c) 2003-2004 Zope Corporation and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
+msgid ""
+msgstr ""
+"Project-Id-Version: Development/Unknown\n"
+"POT-Creation-Date: Sun Dec 11 10:43:18 2011\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Zope 3 Developers <zope3-dev@zope.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: zope/app/locales/extract.py\n"
+
+#: src/zojax/content/tagging/browser/columns.py:35
+#: src/zojax/content/tagging/feeds.py:39
+#: src/zojax/content/tagging/interfaces.py:31
+#: src/zojax/content/tagging/browser/contenttags.pt:2
+#: src/zojax/content/tagging/browser/tagcloudportlet.pt:8
+#: src/zojax/content/tagging/browser/tags.pt:1
+msgid "Tags"
+msgstr ""
+
+#: src/zojax/content/tagging/browser/configlet.py:32
+msgid "Tags have been updated."
+msgstr ""
+
+#: src/zojax/content/tagging/browser/tag.pt:15
+msgid "Total number of items in this tagging engine is ${number}"
+msgstr ""
+
+#: src/zojax/content/tagging/browser/tag.pt:17
+msgid "There are no contents for this tag."
+msgstr ""
+
+#: src/zojax/content/tagging/browser/tag.pt:32
+msgid "Modified ${date}"
+msgstr ""
+
+#: src/zojax/content/tagging/browser/tag.pt:5
+msgid "Tag contents rss feed"
+msgstr ""
+
+#: src/zojax/content/tagging/browser/tagcloudportlet.pt:21
+msgid "There are no tags."
+msgstr ""
+
+#: src/zojax/content/tagging/browser/tagcloudportlet.pt:27
+msgid "More tags..."
+msgstr ""
+
+#: src/zojax/content/tagging/browser/tagcloudportlet.pt:4
+msgid "Tags rss feed"
+msgstr ""
+
+#: src/zojax/content/tagging/browser/widget_input.pt:33
+msgid "Use commas to separate multiple tags."
+msgstr ""
+
+#: src/zojax/content/tagging/browser/widget_input.pt:38
+msgid "<strong>Popular Tags:</strong> Below is a list of frequently used tags in the system."
+msgstr ""
+
+#: src/zojax/content/tagging/browser/widget_input.pt:61
+msgid "TAGS - Important Tips"
+msgstr ""
+
+#: src/zojax/content/tagging/browser/widget_input.pt:62
+msgid "Tags are simple category names like \"Shipping\" or \"event\". Tags will help you organize and find everything you add to your blog, as well as related information on other blogs."
+msgstr ""
+
+#: src/zojax/content/tagging/browser/widget_input.pt:63
+msgid "You can include just one tag or separate multiple tags with commas."
+msgstr ""
+
+#: src/zojax/content/tagging/configlet.py:34
+#: src/zojax/content/tagging/configure.zcml:39
+msgid "Content tagging"
+msgstr ""
+
+#: src/zojax/content/tagging/configure.zcml:22
+msgid "This area allows you to configure and manage content tagging."
+msgstr ""
+
+#: src/zojax/content/tagging/configure.zcml:22
+msgid "Content item tag management"
+msgstr ""
+
+#: src/zojax/content/tagging/configure.zcml:39
+msgid "Container for content tagging engines."
+msgstr ""
+
+#: src/zojax/content/tagging/configure.zcml:54
+msgid "Content tagging engine"
+msgstr ""
+
+#: src/zojax/content/tagging/configure.zcml:70
+msgid "Global tagging engine"
+msgstr ""
+
+#: src/zojax/content/tagging/configure.zcml:96
+msgid "Content tags cloud"
+msgstr ""
+
+#: src/zojax/content/tagging/engine.py:51
+msgid "All tags"
+msgstr ""
+
+#: src/zojax/content/tagging/feeds.py:40
+msgid "List of all available tags."
+msgstr ""
+
+#: src/zojax/content/tagging/feeds.py:52
+#. Default: ""
+msgid "Total number of items for this tag is ${number}"
+msgstr ""
+
+#: src/zojax/content/tagging/feeds.py:63
+msgid "Tag content"
+msgstr ""
+
+#: src/zojax/content/tagging/feeds.py:64
+msgid "List of content for tag."
+msgstr ""
+
+#: src/zojax/content/tagging/interfaces.py:102
+msgid "Tagging engine"
+msgstr ""
+
+#: src/zojax/content/tagging/interfaces.py:103
+msgid "Select tagging enging to use in this portlet."
+msgstr ""
+
+#: src/zojax/content/tagging/interfaces.py:109
+msgid "Restrict tags to contained items"
+msgstr ""
+
+#: src/zojax/content/tagging/interfaces.py:110
+msgid "If checked tags will be shown only for contained objects in current space."
+msgstr ""
+
+#: src/zojax/content/tagging/interfaces.py:32
+msgid "Think of a tag as a simple category name. You can categorize your documents, files, and blog posts with any word or words that makes sense."
+msgstr ""
+
+#: src/zojax/content/tagging/interfaces.py:92
+msgid "Label"
+msgstr ""
+
+#: src/zojax/content/tagging/interfaces.py:96
+msgid "Tags count"
+msgstr ""
+
+#: src/zojax/content/tagging/interfaces.py:97
+msgid "Number of tags in portlet."
+msgstr ""
+
