@@ -83,10 +83,11 @@ let's mark content as taggable
     >>> print user.contents
     <html>
     ...
-    <label for="form-widgets-tags"
-             title="Think of a tag as a simple category name. You can categorize your documents, files, and blog posts with any word or words that makes sense.">Tags</label>
-    <div class="z-form-help">Think of a tag as a simple category name. You can categorize your documents, files, and blog posts with any word or words that makes sense.</div>
-    <div>
+      <label for="form-widgets-tags" title="Think of a tag as a simple category name. You can categorize your documents, files, and blog posts with any word or words that makes sense.">Tags</label>
+    <BLANKLINE>
+    <BLANKLINE>
+      <div class="z-form-help">Think of a tag as a simple category name. You can categorize your documents, files, and blog posts with any word or words that makes sense.</div>
+    ...
     <input type="text" id="form-widgets-tags"
            name="form.widgets.tags"
            class="z-widget-tags tagsfield-field" value="" />
@@ -133,15 +134,27 @@ We see tags in content as links
     >>> print user.contents
     <html>
     ...
-    <strong>Popular Tags:</strong> Below is a list of frequently used tags in the system.
-    <div class="z-widget-tags-links">
-        <a href="#"
-           onclick="document.getElementById('form-widgets-tags').value += ', tag2'; return false;">tag2</a>
-        <a href="#"
-           onclick="document.getElementById('form-widgets-tags').value += ', tag1'; return false;">tag1</a>
-        <a href="#"
-           onclick="document.getElementById('form-widgets-tags').value += ', tag3'; return false;">tag3</a>
-    </div>
+        <strong>Popular Tags:</strong> Below is a list of frequently used tags in the system.
+    <BLANKLINE>
+      <div class="z-widget-tags-links">
+        <a href="#">tag2</a>
+        <a href="#">tag1</a>
+        <a href="#">tag3</a>
+      </div>
+      <script type='text/javascript'>
+    $(document).ready(function() {
+        $(".z-widget-tags-links a").click(function() {
+            var $this = $(this);
+            var $input = $( "#form-widgets-tags" );
+            var $tag = $this.text();
+            if ($input.val().indexOf($tag) == -1) {
+                var $text = $input.val() ? $input.val() + ', ' + $tag : $tag;
+                $input.val( $text );
+            }
+            return false;
+        });
+    });
+      </script>
     ...
     </html>
 
@@ -192,6 +205,7 @@ Taggable content types
 
     >>> for engine in configlet.contentTypesEngines():
     ...     print engine.__name__, engine
+    content.space <zojax.content.tagging.engine.ContentTaggingEngine object at ...>
 
 
 Tags browser
@@ -202,19 +216,24 @@ List of all tags engines
     >>> user.open('http://localhost/@@tags/')
     >>> print user.contents
     <html>
+    ...
     ...<h1 class="z-content-title">Tags</h1>...
-    <ul class="z-listing">
-       <li class="even">
+      <ul class="z-listing">
+        <li class="even">
           <a href="global/">All tags</a>
           <div class="byline">Total items: 3, total tags: 5</div>
-       </li> <li class="odd">
+        </li> <li class="odd">
           <a href="tests.content1/">Tags for: Content1</a>
           <div class="byline">Total items: 1, total tags: 3</div>
-       </li> <li class="even">
+        </li> <li class="even">
           <a href="tests.content2/">Tags for: Content2</a>
           <div class="byline">Total items: 2, total tags: 3</div>
-       </li>
-    </ul>...
+        </li> <li class="odd">
+          <a href="content.space/">Tags for: Space</a>
+          <div class="byline">Total items: 0, total tags: 0</div>
+        </li>
+      </ul>
+    ...
     </html>
 
 Tag cloud for engine
@@ -299,25 +318,38 @@ Tag content rss feed
     <?xml version="1.0" encoding="UTF-8"?>
     <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
       <channel>
-        <title>Tag content</title>
+        <title>Tag content
+    </title>
         <link>http://localhost/tags/global/tag1/</link>
         <description>List of content for tag.</description>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
         <atom:link rel="self" type="application/rss+xml"
                    href="http://localhost/tags/global/tag1/@@feeds/content"/>
         <item>
           <title></title>
-          <description></description>
+          <description type="html"><![CDATA[]]></description>
           <guid isPermaLink="true">http://localhost/content21/</guid>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
           <pubDate>...</pubDate>
         </item>
         <item>
           <title></title>
-          <description></description>
+          <description type="html"><![CDATA[]]></description>
           <guid isPermaLink="true">http://localhost/content11/</guid>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
           <pubDate>...</pubDate>
         </item>
       </channel>
     </rss>
+    <BLANKLINE>
 
 
 Tags portlet
@@ -365,38 +397,65 @@ Tags rss feed
     <?xml version="1.0" encoding="UTF-8"?>
     <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
       <channel>
-        <title>Tags</title>
+        <title>Tags
+    </title>
         <link>http://localhost/</link>
         <description>List of all available tags.</description>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
         <atom:link rel="self" type="application/rss+xml"
                    href="http://localhost/@@feeds/tags"/>
         <item>
           <title>tag1</title>
-          <description>Total number of items for this tag is 2</description>
+          <description type="html"><![CDATA[Total number of items for this tag is 2]]></description>
           <guid isPermaLink="true">http://localhost/@@tags/global/tag1/</guid>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
         </item>
         <item>
           <title>tag4</title>
-          <description>Total number of items for this tag is 2</description>
+          <description type="html"><![CDATA[Total number of items for this tag is 2]]></description>
           <guid isPermaLink="true">http://localhost/@@tags/global/tag4/</guid>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
         </item>
         <item>
           <title>tag3</title>
-          <description>Total number of items for this tag is 1</description>
+          <description type="html"><![CDATA[Total number of items for this tag is 1]]></description>
           <guid isPermaLink="true">http://localhost/@@tags/global/tag3/</guid>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
         </item>
         <item>
           <title>tag2</title>
-          <description>Total number of items for this tag is 1</description>
+          <description type="html"><![CDATA[Total number of items for this tag is 1]]></description>
           <guid isPermaLink="true">http://localhost/@@tags/global/tag2/</guid>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
         </item>
         <item>
           <title>tag5</title>
-          <description>Total number of items for this tag is 1</description>
+          <description type="html"><![CDATA[Total number of items for this tag is 1]]></description>
           <guid isPermaLink="true">http://localhost/@@tags/global/tag5/</guid>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
+    <BLANKLINE>
         </item>
       </channel>
     </rss>
+    <BLANKLINE>
 
 
 Tags column

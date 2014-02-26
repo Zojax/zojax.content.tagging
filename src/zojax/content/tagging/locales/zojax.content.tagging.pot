@@ -123,7 +123,7 @@ msgstr ""
 
 #: src/zojax/content/tagging/feeds.py:52
 #. Default: ""
-msgid "Total number of items for this tag is ${number}"
+msgid "Total number of items for this tag is %s"
 msgstr ""
 
 #: src/zojax/content/tagging/feeds.py:63

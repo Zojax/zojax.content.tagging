@@ -47,10 +47,10 @@ class TagsRSSFeed(RSS2Feed):
         url = '%s/@@tags/global'%absoluteURL(self.context, request)
 
         for weight, tag in engine.getTagCloud(True):
+            msg = _('Total number of items for this tag is %s')
             yield {
                 'title': tag,
-                'description': _('Total number of items for this tag is ${number}',
-                                 mapping={'number': len(engine.getItems((tag,)))}),
+                'description': msg % len(engine.getItems((tag,))),
                 'guid': '%s/%s/'%(url, tag),
                 'isPermaLink': True}
 
